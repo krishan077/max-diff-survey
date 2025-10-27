@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-setup',
@@ -9,6 +10,8 @@ export class SetupComponent implements OnInit {
 
   setUpTabs = ["General", "Concepts", "Features", "Preview"];
   selectedTab = 0;
+  surveyForm:any;
+  editData:any = [];
 
   data = [
   { id: "1", name: "Modern Office Workspace", imageUrl: "https://images.unsplash.com/photo-1630283017802-785b7aff9aac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBvZmZpY2UlMjB3b3Jrc3BhY2V8ZW58MXx8fHwxNzYxMTczMTQ3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
@@ -44,29 +47,112 @@ export class SetupComponent implements OnInit {
 ];
 concepts: any;
 
+constructor(private _fb:FormBuilder){
+    this.createForm();
+}
+
 ngOnInit(): void {
   //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
   //Add 'implements OnInit' to the class.
+
+  console.log(this.surveyForm)
   this.concepts = this.data.map((concept: any)=>{
     concept['edit'] = false;
     return concept;
   })
-
-  console.log(this.concepts);
-  
+  // const data = localStorage.getItem('allData');
+  // this.editData = data ? JSON.parse(data) : [];
+  // if(this.editData){
+  //   this.surveyForm.patchValue(this.editData);
+  //   console.log(this.surveyForm.value);
+  //   const conceptsArray = this.surveyForm.get('concept') as FormArray;
+  //   conceptsArray.clear();
+  //   if (this.editData.concept?.length) {
+  //     this.editData.concept.forEach((s: any) =>
+  //       conceptsArray.push(
+  //         this._fb.group({
+  //           name: [s.name],
+  //           imageUrl: [s.imageUrl],
+  //           edit: [false],
+  //         })
+  //       )
+  //     );
+  //   }
+  // }
 }
+ createForm(){
+  this.surveyForm = this._fb.group({
+    general:this._fb.group({
+      survey_title:this._fb.control('',Validators.required),
+      survey_description:this._fb.control('',Validators.required),
+      number_sets:this._fb.control(1,Validators.compose([Validators.required,Validators.min(1),Validators.max(20)])),
+      concept_sets:this._fb.control(3,Validators.compose([Validators.required,Validators.min(3),Validators.max(10)]))
+    }),
+    addNewConcept:this._fb.group({
+      concept_name:this._fb.control(''),
+      concept_image:this._fb.control('')
+    }),
+    concept:this._fb.array([]),
+    features:this._fb.group({
+    show_pre_survey:this._fb.control(false,Validators.required),
+    show_probing:this._fb.control(false,Validators.required),
+    show_post_survey:this._fb.control(false,Validators.required)
+    })
+  })
+ }
 
   selectTab(index: number){
     this.selectedTab = index;
   }
-
-  addConcept(){
-    console.log("Add function called");
+   handleInputChange(e: any) {
+    let file = e.target.files[0];
+    // this.imageData = file;
+    const el = document.getElementById('logo-upload') as HTMLImageElement;
+    if(el){
+      const url = (URL.createObjectURL(file));
+      console.log(url);
+      if(url){
+        this.surveyForm.get('addNewConcept.concept_image').setValue(url);
+      }
+    }
+    // const el = document.getElementById('file');
+    // if(el && file){
+    //   el.innerHTML = file.name;
+    // }
   }
 
-  editCard(index: number){
-    this.concepts[index].edit = true;
+  get concept():FormArray{
+   return this.surveyForm.get('concept') as FormArray
   }
+  addConcept() {
+    const addForm = this.surveyForm.get('addNewConcept') as FormGroup;
+    const conceptName = addForm.get('concept_name')?.value;
+    const conceptImage = addForm.get('concept_image')?.value;
+
+    if (conceptName.trim() && conceptImage.trim()) {
+      this.concept.push(
+        this._fb.group({
+          name: [conceptName],
+          imageUrl: [conceptImage],
+          edit: [false]
+        })
+      );
+
+      addForm.reset();
+    }
+  }
+
+
+
+  deleteConcept(index: number) {
+    this.concept.removeAt(index);
+  }
+
+
+
+  // editCard(index: number){
+  //   this.concepts[index].edit = true;
+  // }
 
   cancel(index: number){
     this.concepts[index].edit = false;
@@ -76,10 +162,23 @@ ngOnInit(): void {
     console.log(index);
   }
 
-  deleteConcept(index: number){
-    console.log(index);
-    
+  editConcept(index: number) {
+      const control = this.concept.at(index) as FormGroup;
+      control.patchValue({ edit: true });
   }
 
+  saveConcept(index: number) {
+    this.concept.at(index).patchValue({ edit: false });
+  }
+
+
+
+  submit(){
+    console.log(this.surveyForm.value);
+    // const result = this.surveyForm.value;
+    // if(result){
+    //   localStorage.setItem('allData',JSON.stringify(result));
+    // }
+  }
 
 }

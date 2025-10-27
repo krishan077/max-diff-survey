@@ -42,14 +42,14 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col gap-2 w-full">
+                    <div class="flex flex-col gap-2 w-full" [formGroup]="surveyForm">
                         <div class="bg-[#ececf0] text-muted-foreground h-9 items-center justify-center rounded-xl p-[3px] grid w-full grid-cols-4"
                             style="outline: none;">
                             <ng-container *ngFor="let tab of setUpTabs; let i = index">
                                 <button (click)="selectTab(i)"
                                     class="focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-xl border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4"
                                     [ngClass]="selectedTab == i ? 'bg-white' : ''">
-                                    {{tab}}<span *ngIf="i == 1">({{concepts.length}})</span></button>
+                                    {{tab}}<span *ngIf="i == 1">({{concept.controls.length}})</span></button>
                             </ng-container>
                         </div>
 
@@ -58,19 +58,21 @@
 
                             <!-- Genral -->
 
-                            <ng-container *ngIf="selectedTab == 0">
+                            <ng-container *ngIf="selectedTab == 0" formGroupName="general">
                                 <div class="space-y-4">
-                                    <div><label
+                                    <div>
+                                        <label
                                             class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
                                             for="title">Survey Title</label>
-                                        <input data-slot="input"
+                                        <input data-slot="input" formControlName="survey_title"
                                             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-white dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base bg-gray-200 transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                             id="title" placeholder="Enter survey title"
                                             value="Home Design Preferences Survey">
                                     </div>
                                     <div><label
                                             class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
-                                            for="description">Survey Description</label><textarea data-slot="textarea"
+                                            for="description">Survey Description</label>
+                                        <textarea data-slot="textarea" formControlName="survey_description"
                                             class="resize-none border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content w-full rounded-md border bg-gray-200 px-3 py-2 text-base transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm min-h-[80px]"
                                             id="description"
                                             placeholder="Enter survey description">Help us understand your home and interior design preferences</textarea>
@@ -79,19 +81,31 @@
                                         <div>
                                             <label
                                                 class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
-                                                for="numberOfSets">Number of Sets</label><input type="number"
-                                                data-slot="input"
+                                                for="numberOfSets">Number of Sets</label>
+                                            <input type="number" formControlName="number_sets" data-slot="input"
                                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-white dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base bg-gray-200 transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                                                id="numberOfSets" min="1" max="20" value="6">
+                                                id="numberOfSets" min="1" max="20">
+                                                 <p *ngIf="surveyForm.get('general').get('number_sets')?.errors?.min" class="text-red-600 text-sm">
+                                                    *minimum 1 data set is required
+                                                </p>
+                                                <p *ngIf="surveyForm.get('general').get('number_sets')?.errors?.max" class="text-red-600 text-sm">
+                                                    *maximum(20) data sets limit reached
+                                                </p>
                                             <p class="text-gray-500 mt-1">How many question sets participants will
                                                 see</p>
                                         </div>
                                         <div><label
                                                 class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
-                                                for="conceptsPerSet">Concepts Per Set</label><input type="number"
-                                                data-slot="input"
+                                                for="conceptsPerSet">Concepts Per Set</label>
+                                            <input type="number" formControlName="concept_sets" data-slot="input"
                                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-white dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base bg-gray-200 transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                                                id="conceptsPerSet" min="3" max="10" value="5">
+                                                id="conceptsPerSet" min="3" max="10">
+                                                <p *ngIf="surveyForm.get('general').get('concept_sets')?.errors?.min" class="text-red-600 text-sm">
+                                                    *minimum 3 data set is required
+                                                </p>
+                                                <p *ngIf="surveyForm.get('general').get('concept_sets')?.errors?.max" class="text-red-600 text-sm">
+                                                    *maximum(10) data sets limit reached
+                                                </p>
                                             <p class="text-gray-500 mt-1">How many concepts to show at once</p>
                                         </div>
                                     </div>
@@ -99,9 +113,9 @@
                                         class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[&gt;svg]:grid-cols-[calc(var(--spacing)*4)_1fr] grid-cols-[0_1fr] has-[&gt;svg]:gap-x-3 gap-y-0.5 items-start [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:translate-y-0.5 [&amp;&gt;svg]:text-current bg-card text-card-foreground">
                                         <div data-slot="alert-description"
                                             class="text-muted-foreground col-start-2 grid justify-items-start gap-1 text-sm [&amp;_p]:leading-relaxed">
-                                            <strong>Recommendation:</strong> With 6 sets and 5
-                                            concepts per set, you should have at least <strong>30</strong> concepts
-                                            for optimal coverage. You currently have <strong>30</strong> concepts.
+                                            <strong>Recommendation:</strong> With {{surveyForm.get('general.number_sets')?.value}} sets and {{surveyForm.get('general.concept_sets')?.value}}
+                                            concepts per set, you should have at least <strong>{{surveyForm.get('general.number_sets')?.value * surveyForm.get('general.concept_sets')?.value}}</strong> concepts
+                                            for optimal coverage. You currently have <strong>{{concept.length}}</strong> concepts.
                                         </div>
                                     </div>
                                 </div>
@@ -110,24 +124,45 @@
                             <!-- concepts -->
 
                             <ng-container *ngIf="selectedTab == 1">
-                                <div
+                                <div formGroupName="addNewConcept"
                                     class="text-card-foreground flex flex-col gap-6 rounded-xl border p-4 bg-blue-50 border-blue-200">
                                     <h3 class="text-gray-900 mb-4">Add New Concept</h3>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div><label data-slot="label"
                                                 class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
-                                                for="newConceptName">Concept Name</label><input data-slot="input"
+                                                for="newConceptName">Concept Name</label>
+                                            <input data-slot="input" formControlName="concept_name"
                                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-white dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base bg-gray-200 transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                                                id="newConceptName" placeholder="e.g., Modern Kitchen" value=""></div>
+                                                id="newConceptName" placeholder="e.g., Modern Kitchen" value="">
+                                        </div>
                                         <div><label data-slot="label"
                                                 class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
                                                 for="newConceptImage">Image URL</label>
-                                            <div class="flex gap-2"><input data-slot="input"
+                                            <div class="flex gap-2">
+                                                <input data-slot="input" formControlName="concept_image"
                                                     class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-white dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base bg-gray-200 transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive flex-1"
                                                     id="newConceptImage" placeholder="https://images.unsplash.com/..."
                                                     value="">
-                                                <button (click)="addConcept()"
-                                                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-gray-400 text-white hover:bg-primary/90 h-9 px-4 py-2 has-[&gt;svg]:px-3">
+                                                <button
+                                                    type="button"
+                                                    class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition" (click)="upload.click()"
+                                                    >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" 
+                                                        fill="none" 
+                                                        viewBox="0 0 24 24" 
+                                                        stroke-width="2" 
+                                                        stroke="currentColor" 
+                                                        class="w-6 h-6 text-gray-700">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16v-8m0 0l-3 3m3-3l3 3M4 20h16a1 1 0 001-1v-4a1 1 0 00-1-1H4a1 1 0 00-1 1v4a1 1 0 001 1z" />
+                                                    </svg>
+                                                    </button>
+                                                           <input
+                                                        (change)="handleInputChange($event)" #upload id="logo-upload" type="file"
+                                                        accept="image/jpeg" class="hidden">
+
+
+                                                <button (click)="addConcept()" [ngClass]="(surveyForm.get('addNewConcept.concept_name').value !== '' && surveyForm.get('addNewConcept.concept_image').value !== '')  ? 'bg-[#030213]' : 'bg-gray-400'"
+                                                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-white hover:bg-primary/90 h-9 px-4 py-2 has-[&gt;svg]:px-3">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -140,7 +175,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="space-y-2 max-h-[500px] overflow-y-auto">
+                                <!-- <div class="space-y-2 max-h-[500px] overflow-y-auto" >
                                     <ng-container *ngFor="let concept of concepts; let i = index">
                                         <div *ngIf="concept.edit"
                                             class="text-card-foreground flex flex-col gap-6 rounded-xl border p-4 bg-amber-50 border-amber-200">
@@ -212,17 +247,89 @@
                                             </div>
                                         </div>
                                     </ng-container>
+                                </div> -->
+
+                                <div class="space-y-2 max-h-[500px] overflow-y-auto">
+                                    <ng-container formArrayName="concept">
+                                        <div *ngFor="let concept of concept.controls; let i = index"
+                                            [formGroupName]="i">
+                                            <div *ngIf="concept.value.edit"
+                                                class="p-4 border rounded-lg bg-amber-50 mb-2">
+                                                <h3 class="mb-3 font-semibold">Edit Concept</h3>
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <input formControlName="name" class="border p-2 rounded w-full"
+                                                        placeholder="Concept Name" />
+                                                    <input formControlName="imageUrl" class="border p-2 rounded w-full"
+                                                        placeholder="Image URL" />
+                                                </div>
+                                                <div class="flex gap-2 mt-3">
+                                                    <!-- <button (click)="saveConcept(i)" type="button" class="bg-blue-600 text-white px-3 py-1 rounded">Save</button>
+                                        <button (click)="concept.patchValue({ edit: false })" type="button" class="bg-gray-300 px-3 py-1 rounded">Cancel</button> -->
+                                                    <div class="flex gap-2 mt-4">
+                                                        <button  (click)="saveConcept(i)" data-slot="button"
+                                                            class="inline-flex bg-[#030213] text-white items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2 has-[&gt;svg]:px-3">Save
+                                                            Changes</button>
+                                                            <button (click)="concept.patchValue({ edit: false })" data-slot="button"
+                                                            class="inline-flex bg-white text-black items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background text-foreground hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[&gt;svg]:px-3">Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="!concept.value.edit"
+                                                class="border p-4 rounded-lg flex justify-between items-center bg-white mb-2">
+                                                <div class="flex items-center gap-4">
+                                                    <img [src]="concept.value.imageUrl" alt=""
+                                                        class="w-16 h-16 rounded object-cover">
+                                                    <div>
+                                                        <p class="font-medium">{{ concept.value.name }}</p>
+                                                        <p class="text-sm text-gray-500 truncate max-w-[200px]">{{
+                                                            concept.value.imageUrl }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex gap-2">
+                                                    <button (click)="editConcept(i)"
+                                                        class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background text-foreground hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[&gt;svg]:px-2.5">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                            stroke-width="2" stroke-linecap="round"
+                                                            stroke-linejoin="round" class="lucide lucide-pen w-4 h-4"
+                                                            aria-hidden="true">
+                                                            <path
+                                                                d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z">
+                                                            </path>
+                                                        </svg>
+                                                    </button>
+                                                    <button (click)="deleteConcept(i)"
+                                                        class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background text-foreground hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[&gt;svg]:px-2.5">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                            stroke-width="2" stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            class="lucide lucide-trash2 lucide-trash-2 w-4 h-4 text-red-600"
+                                                            aria-hidden="true">
+                                                            <path d="M10 11v6"></path>
+                                                            <path d="M14 11v6"></path>
+                                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                                                            <path d="M3 6h18"></path>
+                                                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
                                 </div>
                             </ng-container>
 
                             <!-- Features -->
 
-                            <ng-container *ngIf="selectedTab == 2">
+                            <ng-container *ngIf="selectedTab == 2" formGroupName="features">
                                 <div class="space-y-4">
                                     <div class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border p-4">
-                                        <div class="flex items-start gap-3"><input type="checkbox" id="enablePreSurvey"
-                                                class="mt-1" checked="">
-                                            <div class="flex-1"><label data-slot="label"
+                                        <div class="flex items-start gap-3">
+                                            <input type="checkbox" id="enablePreSurvey"
+                                                formControlName="show_pre_survey" class="mt-1" checked="">
+                                            <div class="flex-1">
+                                                <label data-slot="label"
                                                     class="flex items-center gap-2 text-sm leading-none font-medium select-none cursor-pointer"
                                                     for="enablePreSurvey">Enable Pre-Survey Questions</label>
                                                 <p class="text-gray-600 mt-1">Collect demographic information and
@@ -233,7 +340,8 @@
                                         </div>
                                     </div>
                                     <div class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border p-4">
-                                        <div class="flex items-start gap-3"><input type="checkbox" id="enableProbing"
+                                        <div class="flex items-start gap-3">
+                                            <input type="checkbox" id="enableProbing" formControlName="show_probing"
                                                 class="mt-1" checked="">
                                             <div class="flex-1"><label data-slot="label"
                                                     class="flex items-center gap-2 text-sm leading-none font-medium select-none cursor-pointer"
@@ -246,8 +354,9 @@
                                         </div>
                                     </div>
                                     <div class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border p-4">
-                                        <div class="flex items-start gap-3"><input type="checkbox" id="enablePostSurvey"
-                                                class="mt-1" checked="">
+                                        <div class="flex items-start gap-3">
+                                            <input type="checkbox" id="enablePostSurvey"
+                                                formControlName="show_post_survey" class="mt-1" checked="">
                                             <div class="flex-1"><label data-slot="label"
                                                     class="flex items-center gap-2 text-sm leading-none font-medium select-none cursor-pointer"
                                                     for="enablePostSurvey">Enable Post-Survey Questions</label>
@@ -282,19 +391,19 @@
                                         <div class="grid md:grid-cols-2 gap-4">
                                             <div>
                                                 <p class="text-gray-600">Title</p>
-                                                <p class="text-gray-900">Home Design Preferences Survey</p>
+                                                <p class="text-gray-900">{{surveyForm.get('general.survey_title')?.value}}</p>
                                             </div>
                                             <div>
                                                 <p class="text-gray-600">Total Concepts</p>
-                                                <p class="text-gray-900">30</p>
+                                                <p class="text-gray-900">{{concept.length}}</p>
                                             </div>
                                             <div>
                                                 <p class="text-gray-600">Number of Sets</p>
-                                                <p class="text-gray-900">6</p>
+                                                <p class="text-gray-900">{{surveyForm.get('general.number_sets')?.value}}</p>
                                             </div>
                                             <div>
                                                 <p class="text-gray-600">Concepts Per Set</p>
-                                                <p class="text-gray-900">5</p>
+                                                <p class="text-gray-900">{{surveyForm.get('general.concept_sets')?.value}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -365,13 +474,23 @@
                                     </div>
                                 </div>
                             </ng-container>
-                            
+
                         </div>
                     </div>
 
                     <div class="mt-8 pt-6 border-t flex justify-between items-center">
-                        <div></div>
-                        <button
+                        <div> <p class="text-red-600 text-sm" *ngIf="(concept?.controls?.length || 0) < 
+                    ((surveyForm.get('general.number_sets')?.value || 0) *
+                    (surveyForm.get('general.concept_sets')?.value || 0))">
+                           *Required {{surveyForm.get('general.number_sets')?.value * surveyForm.get('general.concept_sets')?.value}} concepts
+                            </p>
+                            </div>
+                        <button (click)="submit()" [disabled]="
+                    !surveyForm.valid ||
+                    (concept?.controls?.length || 0) <
+                    ((surveyForm.get('general.number_sets')?.value || 0) *
+                    (surveyForm.get('general.concept_sets')?.value || 0))
+                "
                             class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-white h-10 rounded-md px-6 has-[&gt;svg]:px-4 bg-indigo-600 hover:bg-indigo-700"><svg
                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
