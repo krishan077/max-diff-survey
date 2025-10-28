@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-setup',
@@ -12,6 +12,7 @@ export class SetupComponent implements OnInit {
   selectedTab = 0;
   surveyForm:any;
   editData:any = [];
+  availableConcept:number = 2;
 
   data = [
   { id: "1", name: "Modern Office Workspace", imageUrl: "https://images.unsplash.com/photo-1630283017802-785b7aff9aac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBvZmZpY2UlMjB3b3Jrc3BhY2V8ZW58MXx8fHwxNzYxMTczMTQ3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
@@ -79,14 +80,31 @@ ngOnInit(): void {
   //     );
   //   }
   // }
+this.surveyForm.get('general')?.get('total_concept')?.valueChanges.subscribe((res:any) => {
+  if(res){
+   this.setsCalculation(this.allConcept.value,this.conceptSets.value,this.setsRepetition.value);
+  }
+});
+this.surveyForm.get('general')?.get('concept_sets')?.valueChanges.subscribe((res:any) => {
+  if(res){
+   this.setsCalculation(this.allConcept.value,this.conceptSets.value,this.setsRepetition.value);
+  }
+});
+this.surveyForm.get('general')?.get('concept_repetition')?.valueChanges.subscribe((res:any) => {
+  if(res){
+   this.setsCalculation(this.allConcept.value,this.conceptSets.value,this.setsRepetition.value);
+  }
+});
 }
  createForm(){
   this.surveyForm = this._fb.group({
     general:this._fb.group({
       survey_title:this._fb.control('',Validators.required),
       survey_description:this._fb.control('',Validators.required),
-      number_sets:this._fb.control(1,Validators.compose([Validators.required,Validators.min(1),Validators.max(20)])),
-      concept_sets:this._fb.control(3,Validators.compose([Validators.required,Validators.min(3),Validators.max(10)]))
+      total_concept:this._fb.control(2,Validators.compose([Validators.required,Validators.min(2),Validators.max(100)])),
+      concept_sets:this._fb.control(2,Validators.compose([Validators.required,Validators.min(2),Validators.max(10)])),
+      concept_repetition:this._fb.control(1,Validators.compose([Validators.required,Validators.min(1),Validators.max(5)])),
+      number_sets:this._fb.control(1,Validators.compose([Validators.required,Validators.min(1)])),
     }),
     addNewConcept:this._fb.group({
       concept_name:this._fb.control(''),
@@ -124,6 +142,17 @@ ngOnInit(): void {
   get concept():FormArray{
    return this.surveyForm.get('concept') as FormArray
   }
+
+  get allConcept():FormControl{
+    return this.surveyForm.get('general.total_concept') as FormControl
+  }
+  get conceptSets():FormControl{
+    return this.surveyForm.get('general.concept_sets') as FormControl
+  }
+  get setsRepetition():FormControl{
+    return this.surveyForm.get('general.concept_repetition') as FormControl
+  }
+
   addConcept() {
     const addForm = this.surveyForm.get('addNewConcept') as FormGroup;
     const conceptName = addForm.get('concept_name')?.value;
@@ -170,6 +199,15 @@ ngOnInit(): void {
   saveConcept(index: number) {
     this.concept.at(index).patchValue({ edit: false });
   }
+
+  setsCalculation(totalConcept:number,conceptSet:number,setRepetiion:number){
+     this.availableConcept = totalConcept*setRepetiion;
+    const result = this.availableConcept/conceptSet;
+    if(result){
+      this.surveyForm.get('general.number_sets').setValue(Math.ceil(result));
+    }
+  }
+
 
 
 

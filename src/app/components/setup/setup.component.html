@@ -77,39 +77,83 @@
                                             id="description"
                                             placeholder="Enter survey description">Help us understand your home and interior design preferences</textarea>
                                     </div>
-                                    <div class="grid grid-cols-2 gap-4">
+
+
+
+                                <!-- repeat block here -->
+                                                <div class="grid grid-cols-2 gap-4">
                                         <div>
                                             <label
                                                 class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
-                                                for="numberOfSets">Number of Sets</label>
-                                            <input type="number" formControlName="number_sets" data-slot="input"
+                                                for="numberOfSets"> Total Number of concepts</label>
+                                            <input type="number" formControlName="total_concept" data-slot="input"
                                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-white dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base bg-gray-200 transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                                                id="numberOfSets" min="1" max="20">
-                                                 <p *ngIf="surveyForm.get('general').get('number_sets')?.errors?.min" class="text-red-600 text-sm">
-                                                    *minimum 1 data set is required
+                                                id="numberOfSets" min="1" max="100">
+                                                 <p *ngIf="surveyForm.get('general').get('total_concept')?.errors?.min" class="text-red-600 text-sm">
+                                                    *Minimum (2) Concepts is Required
                                                 </p>
-                                                <p *ngIf="surveyForm.get('general').get('number_sets')?.errors?.max" class="text-red-600 text-sm">
-                                                    *maximum(20) data sets limit reached
+                                                <p *ngIf="surveyForm.get('general').get('total_concept')?.errors?.max" class="text-red-600 text-sm">
+                                                    *Maximum (100) Concepts limit reached
                                                 </p>
-                                            <p class="text-gray-500 mt-1">How many question sets participants will
-                                                see</p>
+                                            <p class="text-gray-500 mt-1">Total number of concepts</p>
                                         </div>
-                                        <div><label
+                                        <div>
+                                            <label
                                                 class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
                                                 for="conceptsPerSet">Concepts Per Set</label>
                                             <input type="number" formControlName="concept_sets" data-slot="input"
                                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-white dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base bg-gray-200 transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                                                id="conceptsPerSet" min="3" max="10">
+                                                id="conceptsPerSet" min="2" max="10">
                                                 <p *ngIf="surveyForm.get('general').get('concept_sets')?.errors?.min" class="text-red-600 text-sm">
-                                                    *minimum 3 data set is required
+                                                    *Minimum (2) Concept Per Set is Required
                                                 </p>
                                                 <p *ngIf="surveyForm.get('general').get('concept_sets')?.errors?.max" class="text-red-600 text-sm">
-                                                    *maximum(10) data sets limit reached
+                                                    *Maximum (10) Concepts Per Set limit reached
+                                                </p>
+                                                <p *ngIf="surveyForm.get('general.concept_sets')?.value > surveyForm.get('general.total_concept')?.value" class="text-red-600 text-sm">
+                                                    *Not sufficient available concept
                                                 </p>
                                             <p class="text-gray-500 mt-1">How many concepts to show at once</p>
                                         </div>
                                     </div>
-                                    <div data-slot="alert" role="alert"
+                                 <!-- repeat block ends -->
+
+
+
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label
+                                                class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
+                                                for="numberOfSets">Repetition of Concept</label>
+                                            <input type="number" formControlName="concept_repetition" data-slot="input"
+                                                class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-white dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base bg-gray-200 transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                                id="numberOfSets" min="1" max="5">
+                                                 <p *ngIf="surveyForm.get('general').get('concept_repetition')?.errors?.min" class="text-red-600 text-sm">
+                                                    *Minimum (1) Concept Repetition is Required
+                                                </p>
+                                                <p *ngIf="surveyForm.get('general').get('concept_repetition')?.errors?.max" class="text-red-600 text-sm">
+                                                    *Maximum (5) Times a Concept Repeats 
+                                                </p>
+                                            <p class="text-gray-500 mt-1">How Many Times a Concept Repeats</p>
+                                        </div>
+                                     <div>
+                                            <label
+                                                class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
+                                                for="numberOfSets">Number of Sets</label>
+                                            <input type="number" formControlName="number_sets" data-slot="input"
+                                                class="cursor-not-allowed file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-white dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base bg-gray-200 transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                                id="numberOfSets" min="1">
+                                                 <!-- <p *ngIf="surveyForm.get('general').get('number_sets')?.errors?.min" class="text-red-600 text-sm">
+                                                    *minimum 1 data set is required
+                                                </p>
+                                                <p *ngIf="surveyForm.get('general').get('number_sets')?.errors?.max" class="text-red-600 text-sm">
+                                                    *maximum(20) data sets limit reached
+                                                </p> -->
+                                            <p class="text-gray-500 mt-1">How many question sets participants will
+                                                see</p>
+                                            </div>
+                                    </div>
+                                    <!-- <div data-slot="alert" role="alert"
                                         class="relative w-full rounded-lg border px-4 py-3 text-sm grid has-[&gt;svg]:grid-cols-[calc(var(--spacing)*4)_1fr] grid-cols-[0_1fr] has-[&gt;svg]:gap-x-3 gap-y-0.5 items-start [&amp;&gt;svg]:size-4 [&amp;&gt;svg]:translate-y-0.5 [&amp;&gt;svg]:text-current bg-card text-card-foreground">
                                         <div data-slot="alert-description"
                                             class="text-muted-foreground col-start-2 grid justify-items-start gap-1 text-sm [&amp;_p]:leading-relaxed">
@@ -117,8 +161,13 @@
                                             concepts per set, you should have at least <strong>{{surveyForm.get('general.number_sets')?.value * surveyForm.get('general.concept_sets')?.value}}</strong> concepts
                                             for optimal coverage. You currently have <strong>{{concept.length}}</strong> concepts.
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
+
+
+
+
+
                             </ng-container>
 
                             <!-- concepts -->
@@ -482,14 +531,12 @@
                         <div> <p class="text-red-600 text-sm" *ngIf="(concept?.controls?.length || 0) < 
                     ((surveyForm.get('general.number_sets')?.value || 0) *
                     (surveyForm.get('general.concept_sets')?.value || 0))">
-                           *Required {{surveyForm.get('general.number_sets')?.value * surveyForm.get('general.concept_sets')?.value}} concepts
+                           *Required {{availableConcept}} concepts
                             </p>
                             </div>
                         <button (click)="submit()" [disabled]="
                     !surveyForm.valid ||
-                    (concept?.controls?.length || 0) <
-                    ((surveyForm.get('general.number_sets')?.value || 0) *
-                    (surveyForm.get('general.concept_sets')?.value || 0))
+                    (concept?.controls?.length || 0) < availableConcept
                 "
                             class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-white h-10 rounded-md px-6 has-[&gt;svg]:px-4 bg-indigo-600 hover:bg-indigo-700"><svg
                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
