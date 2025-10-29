@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-setup',
@@ -9,10 +10,11 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 export class SetupComponent implements OnInit {
 
   setUpTabs = ["General", "Concepts", "Features", "Preview"];
-  selectedTab = 0;
+  selectedTab:any = 0;
   surveyForm:any;
   editData:any = [];
   availableConcept:number = 2;
+  md_id:number = 0;
 
   data = [
   { id: "1", name: "Modern Office Workspace", imageUrl: "https://images.unsplash.com/photo-1630283017802-785b7aff9aac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBvZmZpY2UlMjB3b3Jrc3BhY2V8ZW58MXx8fHwxNzYxMTczMTQ3fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
@@ -48,7 +50,7 @@ export class SetupComponent implements OnInit {
 ];
 concepts: any;
 
-constructor(private _fb:FormBuilder){
+constructor(private _fb:FormBuilder , private _api:ApiService){
     this.createForm();
 }
 
@@ -80,17 +82,17 @@ ngOnInit(): void {
   //     );
   //   }
   // }
-this.surveyForm.get('general')?.get('total_concept')?.valueChanges.subscribe((res:any) => {
+this.surveyForm.get('general')?.get('no_of_concepts')?.valueChanges.subscribe((res:any) => {
   if(res){
    this.setsCalculation(this.allConcept.value,this.conceptSets.value,this.setsRepetition.value);
   }
 });
-this.surveyForm.get('general')?.get('concept_sets')?.valueChanges.subscribe((res:any) => {
+this.surveyForm.get('general')?.get('concept_per_set')?.valueChanges.subscribe((res:any) => {
   if(res){
    this.setsCalculation(this.allConcept.value,this.conceptSets.value,this.setsRepetition.value);
   }
 });
-this.surveyForm.get('general')?.get('concept_repetition')?.valueChanges.subscribe((res:any) => {
+this.surveyForm.get('general')?.get('no_of_repeatition')?.valueChanges.subscribe((res:any) => {
   if(res){
    this.setsCalculation(this.allConcept.value,this.conceptSets.value,this.setsRepetition.value);
   }
@@ -99,16 +101,18 @@ this.surveyForm.get('general')?.get('concept_repetition')?.valueChanges.subscrib
  createForm(){
   this.surveyForm = this._fb.group({
     general:this._fb.group({
-      survey_title:this._fb.control('',Validators.required),
-      survey_description:this._fb.control('',Validators.required),
-      total_concept:this._fb.control(2,Validators.compose([Validators.required,Validators.min(2),Validators.max(100)])),
-      concept_sets:this._fb.control(2,Validators.compose([Validators.required,Validators.min(2),Validators.max(10)])),
-      concept_repetition:this._fb.control(1,Validators.compose([Validators.required,Validators.min(1),Validators.max(5)])),
-      number_sets:this._fb.control(1,Validators.compose([Validators.required,Validators.min(1)])),
+      title:this._fb.control('',Validators.required),
+      description:this._fb.control('',Validators.required),
+      no_of_concepts:this._fb.control(2,Validators.compose([Validators.required,Validators.min(2),Validators.max(100)])),
+      concept_per_set:this._fb.control(2,Validators.compose([Validators.required,Validators.min(2),Validators.max(10)])),
+      no_of_repeatition:this._fb.control(1,Validators.compose([Validators.required,Validators.min(1),Validators.max(5)])),
+      no_of_sets:this._fb.control(1,Validators.compose([Validators.required,Validators.min(1)])),
+      positive_tag:this._fb.control(null),
+      negative_tag:this._fb.control(null)
     }),
     addNewConcept:this._fb.group({
-      concept_name:this._fb.control(''),
-      concept_image:this._fb.control('')
+      label:this._fb.control('',Validators.required),
+      file:this._fb.control('',Validators.required)
     }),
     concept:this._fb.array([]),
     features:this._fb.group({
@@ -130,7 +134,7 @@ this.surveyForm.get('general')?.get('concept_repetition')?.valueChanges.subscrib
       const url = (URL.createObjectURL(file));
       console.log(url);
       if(url){
-        this.surveyForm.get('addNewConcept.concept_image').setValue(url);
+        this.surveyForm.get('addNewConcept.file').setValue(url);
       }
     }
     // const el = document.getElementById('file');
@@ -144,19 +148,19 @@ this.surveyForm.get('general')?.get('concept_repetition')?.valueChanges.subscrib
   }
 
   get allConcept():FormControl{
-    return this.surveyForm.get('general.total_concept') as FormControl
+    return this.surveyForm.get('general.no_of_concepts') as FormControl
   }
   get conceptSets():FormControl{
-    return this.surveyForm.get('general.concept_sets') as FormControl
+    return this.surveyForm.get('general.concept_per_set') as FormControl
   }
   get setsRepetition():FormControl{
-    return this.surveyForm.get('general.concept_repetition') as FormControl
+    return this.surveyForm.get('general.no_of_repeatition') as FormControl
   }
 
   addConcept() {
     const addForm = this.surveyForm.get('addNewConcept') as FormGroup;
-    const conceptName = addForm.get('concept_name')?.value;
-    const conceptImage = addForm.get('concept_image')?.value;
+    const conceptName = addForm.get('label')?.value;
+    const conceptImage = addForm.get('file')?.value;
 
     if (conceptName.trim() && conceptImage.trim()) {
       this.concept.push(
@@ -204,10 +208,39 @@ this.surveyForm.get('general')?.get('concept_repetition')?.valueChanges.subscrib
      this.availableConcept = totalConcept*setRepetiion;
     const result = this.availableConcept/conceptSet;
     if(result){
-      this.surveyForm.get('general.number_sets').setValue(Math.ceil(result));
+      this.surveyForm.get('general.no_of_sets').setValue(Math.ceil(result));
     }
   }
 
+  submitGeneral(){
+    console.log(this.surveyForm.get('general').value);
+    const params = this.surveyForm.get('general').value;
+    this._api.postApi('api/maxdiff',params).subscribe((res:any)=>{
+      if(res && !res.error){
+        console.log(res);
+        if(res.id){
+          this.md_id = res.id;
+        }
+      }else{
+        console.log(res);
+      }
+    })
+  }
+
+  submitConcept(){
+    const params = this.surveyForm.get('addNewConcept').value;
+    params['flags']=null
+    params['SPSS']=null
+    params['id']=null
+    params['md_id']=this.md_id
+    this._api.postApi('api/maxdiff-concepts',params).subscribe((res:any)=>{
+      if(res && !res.error){
+        console.log(res);
+      }else{
+        console.log(res);
+      }
+    })
+  }
 
 
 
