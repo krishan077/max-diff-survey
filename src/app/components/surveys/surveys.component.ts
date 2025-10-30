@@ -35,8 +35,5 @@ export class SurveysComponent {
     });
   }
 
-  editSurvey(survey: any){
-
-  }
   
 }

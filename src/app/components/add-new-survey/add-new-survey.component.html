@@ -2,6 +2,22 @@
   <div class="tailwind css-myl2ny css-exq74d css-gs60ek">
     <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
       <div class="max-w-6xl mx-auto">
+
+                        <div class="flex items-center justify-between mb-2">
+
+                    <div class="flex items-center gap-4">
+                        <button routerLink="/"
+                            class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:text-accent-foreground dark:hover:bg-accent/50 h-8 rounded-md px-3 has-[&gt;svg]:px-2.5 gap-2 hover:bg-gray-100"
+                            fdprocessedid="o27j4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-arrow-left w-4 h-4" aria-hidden="true">
+                                <path d="m12 19-7-7 7-7"></path>
+                                <path d="M19 12H5"></path>
+                            </svg>Back to Survey</button>
+                    </div>
+                </div>
+
         <div class="text-card-foreground flex flex-col gap-6 rounded-xl border p-8 bg-white shadow-xl">
 
           <div class="flex items-center gap-3 mb-6">
@@ -125,9 +141,9 @@
                 <!-- Submit -->
                 <div class="mt-8 pt-6 border-t flex justify-between items-center">
                   <div></div>
-                  <button (click)="submitGeneral()" [disabled]="!general.valid"
+                  <button (click)="this.md_id ? updateGeneral() : submitGeneral()" [disabled]="!general.valid"
                     class="inline-flex items-center text-white bg-indigo-600 hover:bg-indigo-700 h-10 rounded-md px-6">
-                    Submit
+                    {{this.md_id ? 'Update' : 'Submit'}}
                   </button>
                 </div>
 

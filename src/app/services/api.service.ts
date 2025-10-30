@@ -17,4 +17,8 @@ postApi(endpoint:string,payload:any){
   return this._http.post(environment.apiUrl + endpoint , payload)
 }
 
+putApi(endpoint:string,payload:any){
+  return this._http.put(environment.apiUrl + endpoint , payload)
+}
+
 }

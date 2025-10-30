@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-new-survey',
@@ -15,7 +16,7 @@ export class AddNewSurveyComponent {
   // declare availableConcept
   availableConcept: number = 0;
 
-  constructor(private _api: ApiService, private _fb: FormBuilder){
+  constructor(private _api: ApiService, private _fb: FormBuilder, private route: ActivatedRoute, private router: Router){
     this.createGenralForm();
 
     // Auto-calc when any relevant field changes
@@ -24,6 +25,11 @@ export class AddNewSurveyComponent {
         this.setsCalculation(val.no_of_concepts, val.concept_per_set, val.no_of_repeatition);
       }
     });
+
+    this.route.queryParams.subscribe((param)=>{
+      this.md_id = param['md_id'];
+      this.getSurvey(this.md_id);
+    })
   }
 
   createGenralForm(){
@@ -53,11 +59,41 @@ export class AddNewSurveyComponent {
     this._api.postApi('api/maxdiff', params).subscribe((res: any) => {
       if(res && !res.error){
         if(res.id){
-          this.md_id = res.id;
+          // this.md_id = res.id;
+          this.router.navigate(['/'])
         }
       } else {
         console.log(res);
       }
     });
   }
+
+    updateGeneral(){
+    const params = this.general.getRawValue(); // FIXED
+    this._api.putApi(`api/maxdiff?id=${this.md_id}`, params).subscribe((res: any) => {
+      if(res && !res.error){
+        if(res.id){
+          // this.md_id = res.id;
+          this.router.navigate(['/'])
+        }
+      } else {
+        console.log(res);
+      }
+    });
+  }
+
+  getSurvey(id: number){
+    this._api.getApi(`api/get-maxdiff?comp_id=2`).subscribe((res: any)=>{
+      if(!res.error){
+        let survey = res['data'].filter((item: any)=>{
+          return item.id == id;
+        })
+        console.log(survey);
+        
+        this.general.patchValue(survey[0])
+      }
+    })
+  }
+
+  
 }
