@@ -4,7 +4,7 @@
             <div class="max-w-6xl mx-auto">
                 <div class="text-card-foreground flex flex-col gap-6 rounded-xl border p-8 bg-white shadow-xl">
                     <div class="space-y-6">
-                        @if(!surveys.length){
+                        @if(!surveys?.length){
                         <div class="bg-white rounded-xl border border-gray-200 p-6">
                             <div
                                 class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
@@ -160,7 +160,7 @@
 
                                     <!-- <div class="text-xs text-gray-600 mb-4 text-center">{{job.createdAt | timeAgo}}
                                     </div> -->
-                                    <button
+                                    <button (click)="setconfigure(survey)"
                                         class="flex items-center gap-2 justify-center w-full px-4 py-2.5  mb-2 text-sm font-medium text-white-700 border border-indigo-300 rounded-lg transition-all duration-200"
                                         routerLink="/setup" [queryParams]="{md_id: survey.id, total_concepts: survey.no_of_concepts}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"

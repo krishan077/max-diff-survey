@@ -21,4 +21,8 @@ putApi(endpoint:string,payload:any){
   return this._http.put(environment.apiUrl + endpoint , payload)
 }
 
+deleteApi(endpoint:string){
+  return this._http.delete(environment.apiUrl + endpoint);
+}
+
 }

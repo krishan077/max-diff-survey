@@ -22,7 +22,7 @@ export class SurveysComponent {
     this._api.getApi('api/get-maxdiff?comp_id=2').subscribe((res: any) => {
       if(res && !res.error){
           console.log(res);
-          this.surveys = res.data;
+          this.surveys = res.response;
       } else {
         console.log(res);
       }
@@ -33,6 +33,9 @@ export class SurveysComponent {
     this.search = this._fb.group({
       value: ['']
     });
+  }
+  setconfigure(survey:any){
+    localStorage.setItem('surveyData',JSON.stringify(survey));
   }
 
   
