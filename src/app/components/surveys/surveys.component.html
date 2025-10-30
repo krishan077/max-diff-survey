@@ -174,7 +174,7 @@
                                         </svg>
                                         <p>Configure Survey</p>
                                     </button>
-                                    <button
+                                    <button *ngIf="survey.status"
                                         class="w-full px-4 py-2.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">Test
                                         Survey</button>
                                 </div>
