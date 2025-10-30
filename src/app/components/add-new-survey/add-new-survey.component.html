@@ -1,0 +1,142 @@
+<div id="container">
+  <div class="tailwind css-myl2ny css-exq74d css-gs60ek">
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-card-foreground flex flex-col gap-6 rounded-xl border p-8 bg-white shadow-xl">
+
+          <div class="flex items-center gap-3 mb-6">
+            <div class="p-3 bg-indigo-100 rounded-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" 
+                width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-settings w-8 h-8 text-indigo-600"
+                aria-hidden="true">
+                <path
+                  d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915
+                  2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831
+                  2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915
+                  2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915
+                  2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831
+                  A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915">
+                </path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h1 class="text-gray-900">MaxDiff Survey Setup</h1>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 w-full" [formGroup]="general">
+            <div class="flex-1 outline-none space-y-6 mt-6">
+              <div class="space-y-4">
+
+                <!-- Title -->
+                <div>
+                  <label class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
+                    for="title">Survey Title</label>
+                  <input formControlName="title"
+                    class="border-input flex h-9 w-full rounded-md border px-3 py-1 bg-gray-200"
+                    id="title" placeholder="Enter survey title">
+                </div>
+
+                <!-- Description -->
+                <div>
+                  <label class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
+                    for="description">Survey Description</label>
+                  <textarea formControlName="description"
+                    class="flex w-full rounded-md border bg-gray-200 px-3 py-2 min-h-[80px]"
+                    id="description"
+                    placeholder="Enter survey description"></textarea>
+                </div>
+
+                <!-- Concepts -->
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
+                      for="numberOfConcepts">Total Number of Concepts</label>
+                    <input type="number" formControlName="no_of_concepts"
+                      class="flex h-9 w-full rounded-md border px-3 py-1 bg-gray-200"
+                      id="numberOfConcepts" min="2" max="100">
+
+                    <p *ngIf="general.get('no_of_concepts')?.errors?.['min']"
+                      class="text-red-600 text-sm">
+                      *Minimum (2) Concepts is Required
+                    </p>
+                    <p *ngIf="general.get('no_of_concepts')?.errors?.['max']"
+                      class="text-red-600 text-sm">
+                      *Maximum (100) Concepts limit reached
+                    </p>
+                  </div>
+
+                  <div>
+                    <label class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
+                      for="conceptsPerSet">Concepts Per Set</label>
+                    <input type="number" formControlName="concept_per_set"
+                      class="flex h-9 w-full rounded-md border px-3 py-1 bg-gray-200"
+                      id="conceptsPerSet" min="2" max="10">
+
+                    <p *ngIf="general.get('concept_per_set')?.errors?.['min']"
+                      class="text-red-600 text-sm">
+                      *Minimum (2) is Required
+                    </p>
+                    <p *ngIf="general.get('concept_per_set')?.errors?.['max']"
+                      class="text-red-600 text-sm">
+                      *Maximum (10) limit reached
+                    </p>
+
+                    <!-- ✅ FIXED comparison -->
+                    <p *ngIf="general.get('concept_per_set')?.value > general.get('no_of_concepts')?.value"
+                      class="text-red-600 text-sm">
+                      *Not enough available concepts
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Repetition -->
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
+                      for="numberOfRepeats">Repetition of Concept</label>
+                    <input type="number" formControlName="no_of_repeatition"
+                      class="flex h-9 w-full rounded-md border px-3 py-1 bg-gray-200"
+                      id="numberOfRepeats" min="1" max="5">
+
+                    <p *ngIf="general.get('no_of_repeatition')?.errors?.['min']"
+                      class="text-red-600 text-sm">
+                      *Minimum (1) repetition required
+                    </p>
+                    <p *ngIf="general.get('no_of_repeatition')?.errors?.['max']"
+                      class="text-red-600 text-sm">
+                      *Maximum repetition is (5)
+                    </p>
+                  </div>
+
+                  <div>
+                    <label class="flex items-center gap-2 text-sm leading-none font-medium select-none mb-2"
+                      for="numberOfSets">Number of Sets</label>
+                    <input type="number" formControlName="no_of_sets"
+                      class="cursor-not-allowed flex h-9 w-full rounded-md border px-3 py-1 bg-gray-200"
+                      id="numberOfSets" [disabled]="true">
+                  </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="mt-8 pt-6 border-t flex justify-between items-center">
+                  <div></div>
+                  <button (click)="submitGeneral()" [disabled]="!general.valid"
+                    class="inline-flex items-center text-white bg-indigo-600 hover:bg-indigo-700 h-10 rounded-md px-6">
+                    Submit
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

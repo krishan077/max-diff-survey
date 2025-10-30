@@ -1,0 +1,192 @@
+<div id="container">
+    <div class="tailwind css-myl2ny css-exq74d css-gs60ek">
+        <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-card-foreground flex flex-col gap-6 rounded-xl border p-8 bg-white shadow-xl">
+                    <div class="space-y-6">
+                        @if(!surveys.length){
+                        <div class="bg-white rounded-xl border border-gray-200 p-6">
+                            <div
+                                class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+                                <div>
+                                    <p class="text-gray-600">Manage your survey listings and survey configuration</p>
+                                    <h2 class="text-xl font-semibold text-gray-900">No Survey</h2>
+                                </div>
+                                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                                    <button routerLink="/add-survey"
+                                        class="bg-[#0B66C2] text-white px-6 py-2.5 rounded-lg hover:bg-[#0B66C2]/90 flex items-center space-x-2 font-medium transition-colors">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                                clip-rule="evenodd">
+                                            </path>
+                                        </svg>
+                                        <span class="hidden sm:inline" routerLink="/add-survey">Create Survey</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        @else if(surveys.length){
+                        <div class="bg-white rounded-xl border border-gray-200 p-6">
+                            <div
+                                class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+                                <div>
+                                    <h2 class="text-xl font-semibold text-gray-900">Surveys</h2>
+                                    <p class="text-gray-600">Manage your survey listings and survey configuration</p>
+                                </div>
+                                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                                    <div class="relative" [formGroup]="search">
+                                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
+                                            fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                        <input type="text" placeholder="Search survey..." formControlName="value"
+                                            class="pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0B66C2] focus:border-transparent">
+                                    </div>
+                                    <button
+                                        class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-white h-10 rounded-md px-6 has-[&gt;svg]:px-4 bg-indigo-600 hover:bg-indigo-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-plus w-4 h-4" aria-hidden="true">
+                                            <path d="M5 12h14"></path>
+                                            <path d="M12 5v14"></path>
+                                        </svg>
+                                        Add
+                                    </button>
+                                    <!-- <select
+                                        class="px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0B66C2] focus:border-transparent"
+                                        fdprocessedid="ip3tp">
+                                        <option value="all">All Status</option>
+                                        <option value="active">Active</option>
+                                        <option value="draft">Draft</option>
+                                        <option value="paused">Paused</option>
+                                        <option value="closed">Closed</option>
+                                    </select> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                            <ng-container *ngFor="let survey of surveys">
+                                <div
+                                    class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all hover:border-gray-300">
+                                    <div class="flex items-start justify-between mb-4">
+                                        <div class="flex-1">
+                                            <h3 class="font-semibold text-gray-900 mb-2 capitalize">{{survey.title}}
+                                            </h3>
+                                            <div class="text-sm text-gray-600 space-y-1">
+                                                <div class="flex items-center">{{survey.description}}</div>
+                                            </div>
+                                        </div>
+                                        <div class="flex space-x-1">
+                                            <button (click)="editSurvey(survey)"
+                                                class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                                                fdprocessedid="laomrn">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path
+                                                        d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z">
+                                                    </path>
+                                                </svg>
+                                            </button>
+
+                                            <button command="show-modal" commandfor="delete_survey"
+                                                (click)="selectedSurvey = survey"
+                                                class="p-2 text-red-400 hover:text-red-600 hover:bg-red-100 rounded-lg transition-colors">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="lucide lucide-trash2 lucide-trash-2 w-4 h-4"
+                                                    aria-hidden="true">
+                                                    <path d="M10 11v6"></path>
+                                                    <path d="M14 11v6"></path>
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6">
+                                                    </path>
+                                                    <path d="M3 6h18"></path>
+                                                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                </svg>
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                    <!-- <div class="flex items-center space-x-2 mb-4"><span
+                                            class="px-3 py-1 text-xs rounded-full font-medium"
+                                            [ngClass]="job.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">{{job.isActive
+                                            ? 'Active' : 'Draft'}}</span>
+                                     
+                                    </div> -->
+                                    <!-- <div class="mb-4" *ngIf="job.skills">
+                                        <div class="text-xs font-medium text-gray-600 mb-2">Required Skills</div>
+                                        <div class="flex flex-wrap gap-1">
+                                            <ng-container *ngFor="let skill of job.skills; let i = index">
+                                                <span *ngIf="i < 4"
+                                                    class="px-2 py-1 text-xs bg-blue-50 text-blue-700 rounded-md font-medium">
+                                                    {{ skill }}
+                                                </span>
+                                                <span *ngIf="i === 4"
+                                                    class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-md font-medium cursor-pointer">
+                                                    +{{ job.skills.length - 4 }} more
+                                                </span>
+                                            </ng-container>
+                                        </div>
+                                    </div> -->
+                                    <div class="grid grid-cols-2 gap-4 mb-4">
+                                        <div class="text-center p-3 bg-blue-50 rounded-lg">
+                                            <div class="text-lg font-semibold text-blue-600">{{survey.no_of_concepts}}
+                                            </div>
+                                            <div class="text-xs text-blue-600">Total Concepts</div>
+                                        </div>
+                                        <div class="text-center p-3 bg-blue-50 rounded-lg">
+                                            <div class="text-lg font-semibold text-blue-600">{{survey.concept_per_set}}
+                                            </div>
+                                            <div class="text-xs text-blue-600">Concepts per set</div>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4 mb-4">
+                                        <div class="text-center p-3 bg-blue-50 rounded-lg">
+                                            <div class="text-lg font-semibold text-blue-600">
+                                                {{survey.no_of_repeatition}}</div>
+                                            <div class="text-xs text-blue-600">Repeatition of Concept</div>
+                                        </div>
+                                        <div class="text-center p-3 bg-blue-50 rounded-lg">
+                                            <div class="text-lg font-semibold text-blue-600">{{survey.no_of_sets ?
+                                                survey.no_of_sets : '-' }}
+                                            </div>
+                                            <div class="text-xs text-blue-600">Number of Sets</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div class="text-xs text-gray-600 mb-4 text-center">{{job.createdAt | timeAgo}}
+                                    </div> -->
+                                    <button
+                                        class="flex items-center gap-2 justify-center w-full px-4 py-2.5  mb-2 text-sm font-medium text-white-700 border border-indigo-300 rounded-lg transition-all duration-200"
+                                        routerLink="/setup" [queryParams]="{md_id: survey.id, total_concepts: survey.no_of_concepts}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-settings w-8 h-8 text-indigo-600" aria-hidden="true">
+                                            <path
+                                                d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915">
+                                            </path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                        <p>Configure Survey</p>
+                                    </button>
+                                    <button
+                                        class="w-full px-4 py-2.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200">Test
+                                        Survey</button>
+                                </div>
+                            </ng-container>
+                        </div>
+
+                        }
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,11 +5,15 @@ import { AppComponent } from './app.component';
 import { SetupComponent } from './components/setup/setup.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { SurveysComponent } from './components/surveys/surveys.component';
+import { AddNewSurveyComponent } from './components/add-new-survey/add-new-survey.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SetupComponent
+    SetupComponent,
+    SurveysComponent,
+    AddNewSurveyComponent
   ],
   imports: [
     BrowserModule,
